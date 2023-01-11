@@ -1,0 +1,25 @@
+ $host = "localhost";
+          $user = "conraleigh";
+          $pw = "431raleighview";
+          $base = "control";
+          $con = new mysqli($host,$user,$pw,$base);
+		  
+		  if ($con->connect_error){
+			  die("Connection failed: " . $con->connect_error);
+		  }
+		  
+		  
+		  $codigo = "SET NAMES 'utf8'";
+		  $resulta = $con->query($codigo);
+
+          $queryb = "SELECT MAX(Id) FROM gestion";
+		  $result = $con->query($queryb);
+		  
+		 		 if ($rowb = mysqli_fetch_row($result))
+                     {
+                        $idb = trim($rowb[0]);
+                     }
+					 
+		mysqli_close($con); 			 
+												 
+                      echo "<br><p style='color:#F00; font-size:12px'><br>Ultimo número registrado <b>$idb</b></p>";	

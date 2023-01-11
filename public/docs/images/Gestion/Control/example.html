@@ -1,0 +1,149 @@
+<html>
+<head>
+<title>JavaScript - Select All checkbox in form</title>
+<script>
+var fieldName='chkName';
+ 
+function selectall(){
+  var i=document.frm.elements.length;
+  var e=document.frm.elements;
+  var name=new Array();
+  var value=new Array();
+  var j=0;
+  for(var k=0;k<i;k++)
+  {
+    if(document.frm.elements[k].name==fieldName)
+    {
+      if(document.frm.elements[k].checked==true){
+        value[j]=document.frm.elements[k].value;
+        j++;
+      }
+    }
+  }
+  checkSelect();
+}
+function selectCheck(obj)
+{
+ var i=document.frm.elements.length;
+  for(var k=0;k<i;k++)
+  {
+    if(document.frm.elements[k].name==fieldName)
+    {
+      document.frm.elements[k].checked=obj;
+    }
+  }
+  selectall();
+}
+ 
+function selectallMe()
+{
+  if(document.frm.allCheck.checked==true)
+  {
+   selectCheck(true);
+  }
+  else
+  {
+    selectCheck(false);
+  }
+}
+function checkSelect()
+{
+ var i=document.frm.elements.length;
+ var berror=true;
+  for(var k=0;k<i;k++)
+  {
+    if(document.frm.elements[k].name==fieldName)
+    {
+      if(document.frm.elements[k].checked==false)
+      {
+        berror=false;
+        break;
+      }
+    }
+  }
+  if(berror==false)
+  {
+    document.frm.allCheck.checked=false;
+  }
+  else
+  {
+    document.frm.allCheck.checked=true;
+  }
+}
+</script>
+<style type="text/css">
+#cuadro {
+	width: 100%;
+	height:auto;
+	margin-right:auto;
+	margin-left: auto;
+	border-style: dotted; border-width: 1px;
+}
+
+table, td, th {    
+    border: 1px solid #ddd;
+	background-color: #f2f2f2;  
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th, td {
+    padding: 15px;
+}
+</style>
+</head>
+ 
+<body>
+<div align="center" id="cuadro">
+<table align="center" cellpadding="10px">
+<form name="frm" method="post" action="http://192.168.39.31/intranet/images/Gestion/control/reporte_documentos_r.php" >
+<tr>
+<th colspan="4"><h2 align="center">Reporte recepción de documentos</h2></th>
+</tr> 
+
+<tr>
+
+<th align="left"><b style='color:#F00;'>Seleccione los Tipos de Entrada *</b><br /> 
+
+
+
+select all :<input type="checkbox" name="allCheck" onClick="selectallMe()">
+<hr><br>
+<input type="checkbox" name="chkName" value="email" onClick="selectall()">EMAIL INSTITUCIONAL<br>
+<input type="checkbox" name="chkName" value="carta" onClick="selectall()">CARTA<br>
+<input type="checkbox" name="chkName" value="fax" onClick="selectall()">FAX<br>
+<input type="checkbox" name="chkName" value="nota" onClick="selectall()">NOTA<br>
+<input type="checkbox" name="chkName" value="oficio" onClick="selectall()">OFICIO<br>
+<input type="checkbox" name="chkName" value="valija" onClick="selectall()">VALIJA<br>
+<input type="checkbox" name="chkName" value="cpostal" onClick="selectall()">CORREO POSTAL<br>
+<input type="checkbox" name="chkName" value="cheque" onClick="selectall()">CHEQUE<br>
+<input type="checkbox" name="chkName" value="factura" onClick="selectall()">FACTURA PROVEEDOR<br>
+<input type="checkbox" name="chkName" value="preso" onClick="selectall()">CORRESPONDENCIA DE UN PRESO<br>
+<input type="checkbox" name="chkName" value="mensajeria" onClick="selectall()">MENSAJERIA<br>
+<input type="checkbox" name="chkName" value="cgeneral" onClick="selectall()">CGENERAL EMAIL<br>
+<input type="checkbox" name="chkName" value="personal" onClick="selectall()">ENTREGA PERSONALMENTE<br>
+
+
+
+</th>
+
+
+
+<td align="center">
+Ingrese la fecha del reporte a generar<br /> <br />   <input type="date" name="fechas" min="2016-01-01" max="2030-12-31" step="0">
+</td>
+</tr>
+<tr>
+<td colspan="2" align="right">   
+<input type="submit" name="Buscar" value="Buscar" />&nbsp;&nbsp;&nbsp;&nbsp;
+<input type="reset" value="Borrar información">&nbsp;&nbsp;&nbsp;&nbsp;
+</td>
+</tr>
+</form>
+</table>
+</div>
+</body>
+</html>
