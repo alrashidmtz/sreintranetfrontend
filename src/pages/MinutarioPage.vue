@@ -7,9 +7,9 @@
     </q-toolbar>
     <q-table
       dense
-      title="Edificios"
+      title="Minutario"
       :pagination="initialPagination"
-      :rows="storeEdificios.edificios"
+      :rows="folios"
       :columns="columns"
       :filter="filter"
       row-key="id"
@@ -41,7 +41,7 @@
           color="secondary"
           icon="add"
           label="Agregar"
-          @click="showNewEdificio()"
+          @click="showNewMinutario()"
         ></q-btn>
       </template>
       <template v-slot:header="props">
@@ -65,7 +65,7 @@
               dense
               color="primary"
               icon="edit"
-              @click="showEditEdificio(props.row.id, props.row.name)"
+              @click="showEditMinutario(props.row.id, props.row.name)"
             />
             <q-btn
               size="sm"
@@ -75,7 +75,7 @@
               color="negative"
               icon="delete"
               function
-              @click="deleteEdificio(props.row.id, props.row.name)"
+              @click="deleteMinutario(props.row.id, props.row.name)"
             />
           </q-td>
         </q-tr>
@@ -83,3 +83,12 @@
     </q-table>
   </q-page>
 </template>
+
+<script setup>
+import { onMounted, computed } from "vue";
+import { useMinutarioStore } from "src/stores/minutario-store";
+
+const storeMinutario = useMinutarioStore();
+const folios = computed(() => storeMinutario.folios);
+onMounted(() => storeMinutario.fetchFolios);
+</script>

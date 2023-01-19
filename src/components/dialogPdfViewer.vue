@@ -4,7 +4,7 @@
     style="min-width: 80vw; min-height: 80vh; width: 100%; height: 100%"
   >
     <q-bar>
-      <h7 class="text-brand-text">{{ title }}</h7>
+      <h6 class="text-brand-text">{{ title }}</h6>
       <q-space></q-space>
       <q-btn color="white" flat icon="close"></q-btn>
     </q-bar>

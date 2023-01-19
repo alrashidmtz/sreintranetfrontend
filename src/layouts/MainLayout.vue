@@ -143,6 +143,12 @@ const linksList = [
     icon: "public",
     link: "https://extranet.sre.gob.mx/",
   },
+  {
+    title: "Intranet DGSC",
+    caption: "Intranet DG Servicios Consulares",
+    icon: "public",
+    link: "https://intranetdgsc.sre.gob.mx/",
+  },
 ];
 </script>
 
