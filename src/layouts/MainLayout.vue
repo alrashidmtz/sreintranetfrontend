@@ -11,6 +11,14 @@
             alt="Logo consulmex filadelfia"
           />
         </q-toolbar-title>
+        <q-btn
+          dense
+          flat
+          round
+          icon="person"
+          no-caps
+          @click="toggleLeftDrawer"
+        />
       </q-toolbar>
       <q-toolbar class="toolbar">
         <q-space></q-space>
@@ -92,12 +100,12 @@ const applications = [
     icon: "beach_access",
     link: "#/vacaciones",
   },
-  {
-    title: "C. Móvil",
-    caption: "Gestión de Consulado Móvil",
-    icon: "holiday_village",
-    link: "#/conmovil",
-  },
+  // {
+  //   title: "C. Móvil",
+  //   caption: "Gestión de Consulado Móvil",
+  //   icon: "holiday_village",
+  //   link: "#/conmovil",
+  // },
 ];
 
 const linksList = [
@@ -164,6 +172,6 @@ const linksList = [
 .logo_mexico {
   background-image: url("images/home.png");
   background-size: cover;
-  height: 110px;
+  height: 100px;
 }
 </style>
