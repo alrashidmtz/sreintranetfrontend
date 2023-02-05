@@ -46,6 +46,49 @@
     <q-item-label header class="q-mt-lg"> Comunicados </q-item-label>
     <div class="row q-gutter-md">
       <q-card class="my-card">
+        <div class="logo_mexico">
+          <q-img src="images/banner/2023_Francisco_Villa.png"></q-img>
+        </div>
+        <q-list bordered separator>
+          <q-item
+            clickable
+            v-ripple
+            @click="
+              showDialogFn(
+                'Manual de identidad',
+                'docs/index/GMX_MANUAL_DE_USOS_2023.pdf'
+              )
+            "
+          >
+            <q-item-section>Manual de uso</q-item-section>
+          </q-item>
+          <q-item
+            clickable
+            v-ripple
+            @click="Download('docs/index/Membretada_Relex_2023.docx')"
+          >
+            <q-item-section>Membretada 2023 (word)</q-item-section>
+            <q-item-section side>
+              <q-avatar>
+                <q-icon name="download"></q-icon>
+              </q-avatar>
+            </q-item-section>
+          </q-item>
+          <!-- <q-item
+            clickable
+            v-ripple
+            @click="Download('docs/index/RELEX_PPT_plantilla_2023.pptx')"
+          >
+            <q-item-section>Plantilla presentación</q-item-section>
+            <q-item-section side>
+              <q-avatar>
+                <q-icon name="download"></q-icon>
+              </q-avatar>
+            </q-item-section>
+          </q-item> -->
+        </q-list>
+      </q-card>
+      <q-card class="my-card">
         <div class="q-pa-sm">
           <q-img src="images/banner/cambiopassword.jpg"> </q-img>
         </div>
@@ -165,120 +208,15 @@
           </q-item>
         </q-list>
       </q-card>
-      <q-card class="my-card">
-        <div class="logo_mexico">
-          <q-img src="images/banner/2023_Francisco_Villa.png"></q-img>
-        </div>
-        <q-list bordered separator>
-          <q-item
-            clickable
-            v-ripple
-            @click="
-              showDialogFn(
-                'Manual de identidad',
-                'docs/index/GMX_MANUAL_DE_USOS_2023.pdf'
-              )
-            "
-          >
-            <q-item-section>Manual de uso</q-item-section>
-          </q-item>
-          <q-item
-            clickable
-            v-ripple
-            @click="Download('docs/index/Membretada_Relex_2023.docx')"
-          >
-            <q-item-section>Membretada 2023 (word)</q-item-section>
-            <q-item-section side>
-              <q-avatar>
-                <q-icon name="download"></q-icon>
-              </q-avatar>
-            </q-item-section>
-          </q-item>
-          <!-- <q-item
-            clickable
-            v-ripple
-            @click="Download('docs/index/RELEX_PPT_plantilla_2023.pptx')"
-          >
-            <q-item-section>Plantilla presentación</q-item-section>
-            <q-item-section side>
-              <q-avatar>
-                <q-icon name="download"></q-icon>
-              </q-avatar>
-            </q-item-section>
-          </q-item> -->
-        </q-list>
-      </q-card>
     </div>
     <div class="row q-gutter-md">
       <q-item-label header class="q-mt-lg"> Calendario </q-item-label>
     </div>
     <div class="row">
-      <q-splitter v-model="splitterModel" :limits="[30, 100]" emit-immediately>
-        <template v-slot:before>
-          <q-calendar
-            ref="calendar"
-            v-model="selectedDate"
-            view="month"
-            locale="en-us"
-            :mini-mode="miniMode"
-            :short-weekday-label="shortWeekdayLabel"
-          >
-            <template #day="{ timestamp, miniMode }">
-              <template v-for="(event, index) in getEvents(timestamp.date)">
-                <template v-if="miniMode">
-                  <q-badge
-                    :key="index"
-                    style="
-                      width: 5px !important;
-                      max-width: 5px;
-                      height: 5px;
-                      max-height: 5px;
-                    "
-                    :class="badgeClasses(event, 'day')"
-                    :style="badgeStyles(event, 'day')"
-                  ></q-badge>
-                </template>
-                <template v-else>
-                  <q-badge
-                    :key="index"
-                    style="
-                      width: 100%;
-                      cursor: pointer;
-                      height: 16px;
-                      max-height: 16px;
-                    "
-                    class="q-mb-xs"
-                    :class="badgeClasses(event, 'day')"
-                    :style="badgeStyles(event, 'day')"
-                  >
-                    <q-icon
-                      v-if="event.icon"
-                      :name="event.icon"
-                      class="q-mr-xs"
-                    ></q-icon
-                    ><span class="ellipsis">{{ event.title }}</span>
-                  </q-badge>
-                </template>
-              </template>
-            </template>
-          </q-calendar>
-        </template>
-        <template v-slot:separator>
-          <q-avatar
-            color="primary"
-            text-color="white"
-            size="40px"
-            icon="drag_indicator"
-          />
-        </template>
-        <template v-slot:after>
-          <div style="min-width: 20px"></div>
-        </template>
-      </q-splitter>
-      <!-- <div class="col-3">
+      <div class="col-3">
         <q-date landscape color="primary" v-model="date" :events="events" />
       </div>
-      <div class="col"></div> -->
+      <div class="col"></div>
     </div>
     <q-dialog v-model="showDialog" :maximized="$q.screen.lt.md">
       <q-card
@@ -308,14 +246,143 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useQuasar } from "quasar";
+import {
+  QCalendarMonth,
+  addToDate,
+  parseDate,
+  parseTimestamp,
+  today,
+} from "@quasar/quasar-ui-qcalendar/src/index.js";
+import "@quasar/quasar-ui-qcalendar/src/QCalendarVariables.sass";
+import "@quasar/quasar-ui-qcalendar/src/QCalendarTransitions.sass";
+import "@quasar/quasar-ui-qcalendar/src/QCalendarMonth.sass";
 
 const $q = useQuasar();
 const showDialog = ref(false);
 const title = ref("");
 const src = ref("");
 const date = ref("");
-const events = ref([]);
+
 const CURRENT_DAY = new Date();
+function getCurrentDay(day) {
+  const newDay = new Date(CURRENT_DAY);
+  newDay.setDate(day);
+  const tm = parseDate(newDay);
+  return tm.date;
+}
+
+const selectedDate = today();
+const events = [
+  {
+    id: 1,
+    title: "1st of the Month",
+    details: "Everything is funny as long as it is happening to someone else",
+    date: getCurrentDay(1),
+    bgcolor: "orange",
+  },
+  {
+    id: 2,
+    title: "Sisters Birthday",
+    details: "Buy a nice present",
+    date: getCurrentDay(4),
+    bgcolor: "green",
+    icon: "fas fa-birthday-cake",
+  },
+  {
+    id: 3,
+    title: "Meeting",
+    details: "Time to pitch my idea to the company",
+    date: getCurrentDay(10),
+    time: "10:00",
+    duration: 120,
+    bgcolor: "red",
+    icon: "fas fa-handshake",
+  },
+  {
+    id: 4,
+    title: "Lunch",
+    details: "Company is paying!",
+    date: getCurrentDay(10),
+    time: "11:30",
+    duration: 90,
+    bgcolor: "teal",
+    icon: "fas fa-hamburger",
+  },
+  {
+    id: 5,
+    title: "Visit mom",
+    details: "Always a nice chat with mom",
+    date: getCurrentDay(20),
+    time: "17:00",
+    duration: 90,
+    bgcolor: "grey",
+    icon: "fas fa-car",
+  },
+  {
+    id: 6,
+    title: "Conference",
+    details: "Teaching Javascript 101",
+    date: getCurrentDay(22),
+    time: "08:00",
+    duration: 540,
+    bgcolor: "blue",
+    icon: "fas fa-chalkboard-teacher",
+  },
+  {
+    id: 7,
+    title: "Girlfriend",
+    details: "Meet GF for dinner at Swanky Restaurant",
+    date: getCurrentDay(22),
+    time: "19:00",
+    duration: 180,
+    bgcolor: "teal",
+    icon: "fas fa-utensils",
+  },
+  {
+    id: 8,
+    title: "Rowing",
+    details: "Stay in shape!",
+    date: getCurrentDay(27),
+    bgcolor: "purple",
+    icon: "rowing",
+    days: 2,
+  },
+  {
+    id: 9,
+    title: "Fishing",
+    details: "Time for some weekend R&R",
+    date: getCurrentDay(27),
+    bgcolor: "purple",
+    icon: "fas fa-fish",
+    days: 2,
+  },
+  {
+    id: 10,
+    title: "Vacation",
+    details:
+      "Trails and hikes, going camping! Don't forget to bring bear spray!",
+    date: getCurrentDay(29),
+    bgcolor: "purple",
+    icon: "fas fa-plane",
+    days: 5,
+  },
+];
+
+function badgeClasses(event, type) {
+  return {
+    [`text-white bg-${event.bgcolor}`]: true,
+    "rounded-border": true,
+  };
+}
+
+function badgeStyles(day, event) {
+  const s = {};
+  // s.left = day.weekday === 0 ? 0 : (day.weekday * this.parsedCellWidth) + '%'
+  // s.top = 0
+  // s.bottom = 0
+  // s.width = (event.days * this.parsedCellWidth) + '%'
+  return s;
+}
 
 onMounted(async () => {
   date.value = CURRENT_DAY.toISOString().substring(0, 10).replace(/-/g, "/");

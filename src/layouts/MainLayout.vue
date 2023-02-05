@@ -17,7 +17,7 @@
           round
           icon="person"
           no-caps
-          @click="toggleLeftDrawer"
+          @click="toggleRightDrawer"
         />
       </q-toolbar>
       <q-toolbar class="toolbar">
