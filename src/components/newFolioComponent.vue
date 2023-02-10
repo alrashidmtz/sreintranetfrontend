@@ -26,6 +26,7 @@
               id="form.tipo"
               outlined
               dense
+              autofocus
               v-model="form.tipo"
               :options="optionTipo"
             />
@@ -40,7 +41,6 @@
               dense
               type="textarea"
               v-model="form.asunto"
-              autofocus
             >
             </q-input>
           </div>

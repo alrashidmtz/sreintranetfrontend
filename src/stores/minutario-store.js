@@ -18,10 +18,16 @@ export const useMinutarioStore = defineStore('minutario', {
         throw new Error(err.message);
       }
     },
-    async fetchFolios () {
+    async fetchFolios (startRow,
+      fetchCount,
+      filter,
+      sortBy,
+      descending) {
       try {
-        const query = await api.get("/minutario");
-        this.folios = query.data.data;
+
+        const query = `/minutario?filter=${filter}&sortby=${sortBy}&descending=${descending}&fetchcount=${fetchCount}&startrow=${startRow}`
+        const result = await api.get(query);
+        this.folios = result.data.data;
       } catch (err) {
         console.log(err.message);
         throw new Error(err.message);
