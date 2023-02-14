@@ -2,7 +2,7 @@
   <q-layout view="hHh lpR fFf">
     <q-header elevated>
       <q-toolbar class="toolbar_top">
-        <q-btn dense flat round icon="menu" @click="toggleRightDrawer" />
+        <q-btn dense flat round icon="menu" @click="leftDrawerOpen = true" />
         <q-toolbar-title>
           <img
             class="flex flex-center"
@@ -11,14 +11,14 @@
             alt="Logo consulmex filadelfia"
           />
         </q-toolbar-title>
-        <q-btn
-          dense
-          flat
-          round
-          icon="person"
-          no-caps
-          @click="toggleRightDrawer"
-        />
+        <q-btn flat round>
+          <q-avatar size="32px">
+            <q-img src="images/user-icon.png" />
+          </q-avatar>
+          <q-menu>
+            <ContextProfile></ContextProfile>
+          </q-menu>
+        </q-btn>
       </q-toolbar>
       <q-toolbar class="toolbar">
         <q-space></q-space>
@@ -47,7 +47,7 @@
       </div> -->
     </q-header>
 
-    <q-drawer show-if-above v-model="rightDrawerOpen" side="left" bordered>
+    <q-drawer show-if-above v-model="leftDrawerOpen" side="left" bordered>
       <div class="q-pa-md logo_mexico">
         <q-img src="images/Logo_Blanco-01.png"></q-img>
       </div>
@@ -79,13 +79,10 @@
 import { ref } from "vue";
 import EssentialLink from "components/EssentialLink.vue";
 import EssentialLinkLocal from "components/EssentialLinkLocal.vue";
+import ContextProfile from "components/menuContextProfile.vue";
 
 const tab = ref("home");
-const rightDrawerOpen = ref(false);
-
-function toggleRightDrawer() {
-  rightDrawerOpen.value = !rightDrawerOpen.value;
-}
+const leftDrawerOpen = ref(false);
 
 const applications = [
   {
@@ -170,7 +167,7 @@ const linksList = [
 }
 
 .logo_mexico {
-  background-image: url("images/home.png");
+  background-image: url("assets/home.png");
   background-size: cover;
   height: 100px;
 }

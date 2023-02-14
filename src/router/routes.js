@@ -13,6 +13,7 @@ const routes = [
       { path: 'minutario', name: 'minutario', component: () => import('pages/MinutarioPage.vue') },
       { path: 'vacaciones', name: 'vacaciones', component: () => import('pages/VacacionesPage.vue') },
       { path: 'conmovil', name: 'conmovil', component: () => import('pages/MovilPage.vue') },
+      { path: 'settings', name: 'settings', component: () => import('pages/SettingsPage.vue') },
     ]
   },
 
