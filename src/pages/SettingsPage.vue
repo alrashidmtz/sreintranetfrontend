@@ -14,8 +14,8 @@
     >
       <q-tab name="usuarios" label="Usuarios" />
       <q-tab name="empleados" label="Empleados" />
-      <q-tab name="sem" label="SEM" />
-      <q-tab name="cadido" label="CADIDO" />
+      <q-tab name="calendario" label="Calendario" />
+      <q-tab name="remitente" label="Remitente" />
     </q-tabs>
     <q-separator />
     <q-tab-panels v-model="tab">
@@ -27,12 +27,12 @@
         <EmpleadosComponent />
       </q-tab-panel>
 
-      <q-tab-panel name="sem">
-        <SEMComponent />
+      <q-tab-panel name="calendario">
+        <CalendarioComponent />
       </q-tab-panel>
 
-      <q-tab-panel name="cadido">
-        <CadidoComponent />
+      <q-tab-panel name="remitente">
+        <RemitenteComponent />
       </q-tab-panel>
     </q-tab-panels>
   </div>
@@ -43,8 +43,8 @@ import { ref } from "vue";
 
 import UsuariosComponent from "src/components/settings/UsuariosComponent.vue";
 import EmpleadosComponent from "src/components/settings/EmpleadosComponent.vue";
-import SEMComponent from "src/components/settings/SEMComponent.vue";
-import CadidoComponent from "src/components/settings/CadidoComponent.vue";
+import CalendarioComponent from "src/components/settings/CalendarioComponent.vue";
+import RemitenteComponent from "src/components/settings/RemitenteComponent.vue";
 
 const tab = ref("usuarios");
 </script>

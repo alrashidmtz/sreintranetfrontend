@@ -36,16 +36,11 @@ export const useUsuariosStore = defineStore('usuarios', {
       }
     },
 
-    async fetchUsuarios (startRow,
-      fetchCount,
-      filter,
-      sortBy,
-      descending) {
+    async fetch () {
       try {
-
-        const query = `/usuarios?filter=${filter}&sortby=${sortBy}&descending=${descending}&fetchcount=${fetchCount}&startrow=${startRow}`
+        const query = `/usuarios`;
         const result = await api.get(query);
-        this.usuarios = result.data.data;
+        this.usuarios = result.data;
       } catch (err) {
         console.log(err.message);
         throw new Error(err.message);

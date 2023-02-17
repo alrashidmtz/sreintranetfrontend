@@ -14,13 +14,13 @@
     </q-toolbar>
     <q-table
       flat
-      v-model:pagination="initialPagination"
+      dense
+      :pagination="initialPagination"
       :rows="storeMinutario.folios"
       :loading="isLoadingTable"
       :columns="columns"
       :filter="filter"
       row-key="id"
-      @request="onRequest"
       loading-label="Cargando..."
       no-data-label="No se encontraron registros"
       no-results-label="No se encontraron registros en este momento"
@@ -92,10 +92,15 @@
 import { ref, onMounted } from "vue";
 import { useQuasar } from "quasar";
 import { useMinutarioStore } from "src/stores/minutario-store";
+import { useEmpleadosStore } from "src/stores/empleados-store";
+
 import newFolioComponent from "src/components/newFolioComponent.vue";
 
-const $q = useQuasar();
 const storeMinutario = useMinutarioStore();
+const storeEmpleado = useEmpleadosStore();
+
+const $q = useQuasar();
+
 const showNewFolioDialog = ref(false);
 const isLoadingTable = ref(false);
 const filter = ref("");
@@ -103,13 +108,10 @@ const title = ref("Agregar");
 const folio = ref({});
 
 const initialPagination = {
-  sortBy: "id",
-  descending: true,
-  page: 1,
   rowsPerPage: 20,
-  rowsNumber: 0,
 };
 
+// @request="onRequest"
 function onRequest(props) {
   const { page, rowsPerPage, sortBy, descending } = props.pagination;
   const filter = props.filter;
@@ -118,21 +120,8 @@ function onRequest(props) {
   // update rowsCount with appropriate value
   pagination.value.rowsNumber = getRowsNumber(filter);
 
-  // get all rows if "All" (0) is selected
-  const fetchCount =
-    rowsPerPage === 0 ? pagination.value.rowsNumber : rowsPerPage;
-
-  // calculate starting row of data
-  const startRow = (page - 1) * rowsPerPage;
-
   // fetch data from "server"
-  const returnedData = fetchFolios(
-    startRow,
-    fetchCount,
-    filter,
-    sortBy,
-    descending
-  );
+  const returnedData = fetchFolios();
 
   // clear out existing data and add new
   rows.value.splice(0, rows.value.length, ...returnedData);
@@ -149,10 +138,8 @@ function onRequest(props) {
 
 onMounted(async () => {
   isLoadingTable.value = true;
+  storeEmpleado.fetch();
 
-  await storeMinutario.getRowsNumber(filter);
-  initialPagination.rowsNumber = storeMinutario.rowsNumber;
-  console.log(initialPagination);
   await storeMinutario.fetchFolios();
 
   isLoadingTable.value = false;
@@ -203,15 +190,7 @@ const columns = [
     required: true,
     label: "Folio",
     align: "left",
-    field: "id",
-    sortable: true,
-  },
-  {
-    name: "asunto",
-    required: true,
-    label: "Asunto",
-    align: "left",
-    field: "asunto",
+    field: "ID",
     sortable: true,
   },
   {
@@ -219,15 +198,26 @@ const columns = [
     required: true,
     label: "Fecha",
     align: "left",
-    field: "fecha",
+    field: "FECHA",
+    // sort: (a, b, rowA, rowB) => parseInt(a, 10) - parseInt(b, 10),
+    format: (val, row) => `${val.toString().slice(0, 10)}`,
     sortable: true,
+  },
+  {
+    name: "asunto",
+    required: true,
+    label: "Asunto",
+    align: "left",
+    field: "ASUNTO",
+    sortable: true,
+    with: "50px",
   },
   {
     name: "referencia",
     required: true,
     label: "Referencia",
     align: "left",
-    field: "referencia",
+    field: "REFERENCIA",
     sortable: true,
   },
   {
@@ -235,7 +225,7 @@ const columns = [
     required: true,
     label: "Documento",
     align: "left",
-    field: "Documento",
+    field: "DOCUMENTO",
     sortable: true,
   },
   {
@@ -243,7 +233,7 @@ const columns = [
     required: true,
     label: "Sicar",
     align: "left",
-    field: "sical",
+    field: "SICAR",
     sortable: true,
   },
   {
@@ -251,7 +241,7 @@ const columns = [
     required: true,
     label: "SEM",
     align: "left",
-    field: "sem",
+    field: "SEM",
     sortable: true,
   },
   {
@@ -259,7 +249,7 @@ const columns = [
     required: true,
     label: "Local",
     align: "left",
-    field: "local",
+    field: "LOCAL",
     sortable: true,
   },
 ];

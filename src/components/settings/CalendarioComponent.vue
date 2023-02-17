@@ -1,11 +1,12 @@
 <template>
   <q-table
     dense
-    title="SEM"
+    title="Calendario"
     :pagination="initialPagination"
-    :rows="storeSEM.SEM"
+    :rows="storeCalendario.calendario"
     :columns="columns"
     :filter="filter"
+    :loading="isLoading"
     row-key="id"
     loading-label="Cargando..."
     no-data-label="No se encontraron registros"
@@ -76,27 +77,28 @@
     </template>
   </q-table>
   <q-dialog v-model="showNewregistroDialog">
-    <newSEMComponent
+    <newCalendarioComponent
       :title="title"
       :registroId="registroId"
       :registroName="registroName"
-    ></newSEMComponent>
+    ></newCalendarioComponent>
   </q-dialog>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { useQuasar } from "quasar";
-import { useSEMStore } from "src/stores/sem-store";
-import newSEMComponent from "./newSEMComponent.vue";
+import { useCalendarioStore } from "src/stores/calendario-store";
+import newCalendarioComponent from "./newCalendarioComponent.vue";
 
 const $q = useQuasar();
-const storeSEM = useSEMStore();
+const storeCalendario = useCalendarioStore();
 const showNewregistroDialog = ref(false);
 const filter = ref("");
 const title = ref("Agregar");
 const registroId = ref(null);
 const registroName = ref(null);
+const isLoading = ref(false);
 
 const initialPagination = {
   sortBy: "name",
@@ -104,7 +106,11 @@ const initialPagination = {
   page: 1,
   rowsPerPage: 20,
 };
-
+onMounted(async () => {
+  isLoading.value = true;
+  await storeCalendario.fetch();
+  isLoading.value = false;
+});
 const showNewregistro = () => {
   title.value = "Agregar";
   registroId.value = null;
@@ -127,7 +133,7 @@ const deleteregistro = (id, name) => {
     message: `¿Está seguro de borrar el registro: ${name}?`,
     cancel: true,
   }).onOk(async () => {
-    const result = await storeSEM.delregistro(id);
+    const result = await storeCalendario.delregistro(id);
     if (result) {
       $q.notify({
         color: "positive",
@@ -139,11 +145,36 @@ const deleteregistro = (id, name) => {
 
 const columns = [
   {
-    name: "name",
+    name: "fecha",
     required: true,
-    label: "registro",
+    label: "Fecha",
     align: "left",
-    field: "name",
+    field: "fecha",
+    format: (val, row) => `${val.toString().slice(0, 10)}`,
+    sortable: true,
+  },
+  {
+    name: "descripcion",
+    required: true,
+    label: "Descripción",
+    align: "left",
+    field: "descripcion",
+    sortable: true,
+  },
+  {
+    name: "categoria",
+    required: true,
+    label: "Categoría",
+    align: "left",
+    field: "categoria",
+    sortable: true,
+  },
+  {
+    name: "enabled",
+    required: true,
+    label: "Activo?",
+    align: "left",
+    field: "enabled",
     sortable: true,
   },
 ];

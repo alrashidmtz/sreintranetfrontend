@@ -6,10 +6,11 @@
     :rows="storeEmpleados.empleados"
     :columns="columns"
     :filter="filter"
+    :loading="isLoading"
     row-key="id"
     loading-label="Cargando..."
-    no-data-label="No se encontraron registros"
-    no-results-label="No se encontraron registros en este momento"
+    no-data-label="No se encontraron Registros"
+    no-results-label="No se encontraron Registros en este momento"
     rows-per-page-label="Registros por página:"
   >
     <template v-slot:top-right>
@@ -35,7 +36,7 @@
         color="secondary"
         icon="add"
         label="Agregar"
-        @click="showNewregistro()"
+        @click="showNewEmpleado()"
       ></q-btn>
     </template>
     <template v-slot:header="props">
@@ -59,7 +60,7 @@
             dense
             color="primary"
             icon="edit"
-            @click="showEditregistro(props.row.id, props.row.name)"
+            @click="showEditEmpleado(props.row)"
           />
           <q-btn
             size="sm"
@@ -69,34 +70,33 @@
             color="negative"
             icon="delete"
             function
-            @click="deleteregistro(props.row.id, props.row.name)"
+            @click="deleteEmpleado(props.row.id, props.row.name)"
           />
         </q-td>
       </q-tr>
     </template>
   </q-table>
-  <q-dialog v-model="showNewregistroDialog">
+  <q-dialog v-model="showNewEmpleadoDialog">
     <newEmpleadosComponent
       :title="title"
-      :registroId="registroId"
-      :registroName="registroName"
+      :empleado="empleado"
     ></newEmpleadosComponent>
   </q-dialog>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { useQuasar } from "quasar";
-import { useempleadosStore } from "src/stores/empleados-store";
+import { useEmpleadosStore } from "src/stores/empleados-store";
 import newEmpleadosComponent from "./newEmpleadosComponent.vue";
 
 const $q = useQuasar();
-const storeEmpleados = useempleadosStore();
-const showNewregistroDialog = ref(false);
+const storeEmpleados = useEmpleadosStore();
+const showNewEmpleadoDialog = ref(false);
 const filter = ref("");
 const title = ref("Agregar");
-const registroId = ref(null);
-const registroName = ref(null);
+const empleado = ref({});
+const isLoading = ref(false);
 
 const initialPagination = {
   sortBy: "name",
@@ -105,33 +105,41 @@ const initialPagination = {
   rowsPerPage: 20,
 };
 
-const showNewregistro = () => {
+onMounted(async () => {
+  isLoading.value = true;
+  await storeEmpleados.fetch();
+  isLoading.value = false;
+});
+
+const showNewEmpleado = () => {
   title.value = "Agregar";
-  registroId.value = null;
-  registroName.value = null;
-  showNewregistroDialog.value = true;
+  empleado.value = {
+    tipo: "PSPI",
+    enabled: "1",
+  };
+  showNewEmpleadoDialog.value = true;
 };
 
-const showEditregistro = (id, name) => {
+const showEditEmpleado = (emp) => {
+  console.log(emp);
   title.value = "Editar";
-  registroId.value = id;
-  registroName.value = name;
-  showNewregistroDialog.value = true;
+  empleado.value = emp;
+  showNewEmpleadoDialog.value = true;
 };
 
-const deleteregistro = (id, name) => {
+const deleteEmpleado = (id, name) => {
   console.log(id, name);
   $q.dialog({
-    title: "Borrar registro",
+    title: "Borrar Empleado",
     color: "negative",
-    message: `¿Está seguro de borrar el registro: ${name}?`,
+    message: `¿Está seguro de borrar el Empleado: ${name}?`,
     cancel: true,
   }).onOk(async () => {
-    const result = await storeEmpleados.delregistro(id);
+    const result = await storeEmpleados.del(id);
     if (result) {
       $q.notify({
         color: "positive",
-        message: "registro borrado con éxito",
+        message: "Empleado borrado con éxito",
       });
     }
   });
@@ -141,9 +149,65 @@ const columns = [
   {
     name: "name",
     required: true,
-    label: "registro",
+    label: "Nombre",
     align: "left",
     field: "name",
+    sortable: true,
+  },
+  {
+    name: "lastName",
+    required: true,
+    label: "Apellidos",
+    align: "left",
+    field: "lastName",
+    sortable: true,
+  },
+  {
+    name: "puesto",
+    required: true,
+    label: "Puesto",
+    align: "left",
+    field: "puesto",
+    sortable: true,
+  },
+  {
+    name: "departamento",
+    required: true,
+    label: "Departamento",
+    align: "left",
+    field: "departamento",
+    sortable: true,
+  },
+  {
+    name: "extension",
+    required: true,
+    label: "extension",
+    align: "left",
+    field: "extension",
+    sortable: true,
+  },
+  {
+    name: "email",
+    required: true,
+    label: "Correo electrónico",
+    align: "left",
+    field: "email",
+    sortable: true,
+  },
+  {
+    name: "tipo",
+    required: true,
+    label: "Tipo",
+    align: "left",
+    field: "tipo",
+    sortable: true,
+  },
+  {
+    name: "enabled",
+    required: true,
+    label: "Activo?",
+    align: "left",
+    field: "enabled",
     sortable: true,
   },
 ];

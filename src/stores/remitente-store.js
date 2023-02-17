@@ -1,48 +1,48 @@
 import { defineStore } from 'pinia';
 import { api } from "boot/axios";
 
-export const useSEMtore = defineStore('sem', {
+export const useRemitenteStore = defineStore('remitente', {
   state: () => ({
-    SEM: [],
+    remitentes: [],
   }),
   getters: {
   },
   actions: {
-    async fetchSEM () {
+    async fetch () {
       try {
-        const query = await api.get("/sem");
-        this.SEM = query.data.data;
+        const query = await api.get("/remitente");
+        this.remitentes = query.data;
       } catch (err) {
         console.log(err.message);
         throw new Error(err.message);
       }
     },
-    async addFolio (data) {
+    async addRemitente (data) {
       try {
-        const response = await api.post("/sem", data);
+        const response = await api.post("/remitente", data);
         data.id = response.data.insertId;
-        this.SEM.push(data);
+        this.remitentes.push(data);
       } catch (err) {
         console.log(err.message);
         throw new Error(err.message);
       }
     },
-    async updFolio (id, data) {
+    async updRemitente (id, data) {
       try {
-        const response = await api.put(`/sem/${id}`, data);
+        const response = await api.put(`/remitente/${id}`, data);
         if (response) {
-          this.folios.push(data);
+          this.remitentes.push(data);
         }
       } catch (err) {
         console.log(err.message);
         throw new Error(err.message);
       }
     },
-    async delFolio (id) {
+    async delRemitente (id) {
       try {
-        const response = await api.delete(`/sem/${id}`);
+        const response = await api.delete(`/remitente/${id}`);
         data.id = response.id;
-        this.SEM.push(data);
+        this.remitentes.push(data);
       } catch (err) {
         console.log(err.message);
         throw new Error(err.message);

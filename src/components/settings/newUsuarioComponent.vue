@@ -1,15 +1,27 @@
 <template>
   <q-card style="width: 600px">
-    <q-card-section class="row items-center q-pb-none">
-      <div class="text-h6">{{ title }} usuario</div>
+    <q-card-section class="row items-center">
+      <div class="text-h6">{{ title }} Usuario</div>
       <q-space />
-      <q-btn icon="close" flat round dense v-close-popup />
+      <q-btn icon="close" flat round v-close-popup />
     </q-card-section>
+    <q-separator></q-separator>
     <q-card-section>
       <q-form @submit="onSubmit" class="q-gutter-md">
-        <q-input outlined v-model="name" autofocus label="Nombre" dense>
+        <q-input
+          autofocus
+          outlined
+          v-model="form.displayName"
+          label="Nombre completo"
+        >
         </q-input>
-        <q-input outlined v-model="email" label="Correo electrónico" dense>
+        <q-input outlined v-model="form.username" label="Usuario"> </q-input>
+        <q-input outlined v-model="form.password" label="Contraseña"> </q-input>
+        <q-input
+          outlined
+          v-model="form.confirmPassword"
+          label="Confirmar contraseña"
+        >
         </q-input>
       </q-form>
     </q-card-section>
@@ -29,35 +41,29 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useQuasar } from "quasar";
-import { useempleadosStore } from "src/stores/empleados-store";
+import { useEmpleadosStore } from "src/stores/empleados-store";
 
 const $q = useQuasar();
-const storeUsuarios = useempleadosStore();
-const name = ref("");
-const email = ref("");
+const storeUsuarios = useEmpleadosStore();
+const form = ref({
+  username: "",
+  displayName: "",
+  password: "",
+  confirmPassword: "",
+});
 
 const props = defineProps({
   title: {
     type: String,
-    default: "",
-  },
-  empleadoId: {
-    type: String,
     requiered: true,
   },
-  usuarioName: {
-    type: String,
-    requiered: true,
-  },
-  usuarioEmail: {
-    type: String,
-    requiered: true,
+  usuario: {
+    type: Object,
   },
 });
 
 onMounted(() => {
-  name.value = props.usuarioName;
-  email.value = props.usuarioEmail;
+  form.value = props.usuario;
 });
 
 async function onSubmit() {

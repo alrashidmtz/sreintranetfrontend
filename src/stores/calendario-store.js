@@ -1,17 +1,17 @@
 import { defineStore } from 'pinia';
 import { api } from "boot/axios";
 
-export const useCadidoStore = defineStore('cadido', {
+export const useCalendarioStore = defineStore('calendario', {
   state: () => ({
-    cadidos: [],
+    calendario: [],
   }),
   getters: {
   },
   actions: {
-    async fetchCadido () {
+    async fetch () {
       try {
-        const query = await api.get("/cadido");
-        this.cadidos = query.data.data;
+        const query = await api.get("/calendario");
+        this.calendario = query.data;
       } catch (err) {
         console.log(err.message);
         throw new Error(err.message);
@@ -19,9 +19,9 @@ export const useCadidoStore = defineStore('cadido', {
     },
     async addFolio (data) {
       try {
-        const response = await api.post("/cadido", data);
+        const response = await api.post("/calendario", data);
         data.id = response.data.insertId;
-        this.cadidos.push(data);
+        this.calendario.push(data);
       } catch (err) {
         console.log(err.message);
         throw new Error(err.message);
@@ -29,7 +29,7 @@ export const useCadidoStore = defineStore('cadido', {
     },
     async updFolio (id, data) {
       try {
-        const response = await api.put(`/cadido/${id}`, data);
+        const response = await api.put(`/calendario/${id}`, data);
         if (response) {
           this.folios.push(data);
         }
@@ -40,9 +40,9 @@ export const useCadidoStore = defineStore('cadido', {
     },
     async delFolio (id) {
       try {
-        const response = await api.delete(`/cadido/${id}`);
+        const response = await api.delete(`/calendario/${id}`);
         data.id = response.id;
-        this.cadidos.push(data);
+        this.calendario.push(data);
       } catch (err) {
         console.log(err.message);
         throw new Error(err.message);
