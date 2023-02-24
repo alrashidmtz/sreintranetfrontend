@@ -1,48 +1,48 @@
 import { defineStore } from 'pinia';
 import { api } from "boot/axios";
 
-export const useCadidoStore = defineStore('cadido', {
+export const useRemitenteStore = defineStore('remitente', {
   state: () => ({
-    cadidos: [],
+    remitentes: [],
   }),
   getters: {
   },
   actions: {
-    async fetchCadido () {
+    async fetch () {
       try {
-        const query = await api.get("/cadido");
-        this.cadidos = query.data.data;
+        const query = await api.get("/remitente");
+        this.remitentes = query.data;
       } catch (err) {
         console.log(err.message);
         throw new Error(err.message);
       }
     },
-    async addFolio (data) {
+    async addRemitente (data) {
       try {
-        const response = await api.post("/cadido", data);
+        const response = await api.post("/remitente", data);
         data.id = response.data.insertId;
-        this.cadidos.push(data);
+        this.remitentes.push(data);
       } catch (err) {
         console.log(err.message);
         throw new Error(err.message);
       }
     },
-    async updFolio (id, data) {
+    async updRemitente (id, data) {
       try {
-        const response = await api.put(`/cadido/${id}`, data);
+        const response = await api.put(`/remitente/${id}`, data);
         if (response) {
-          this.folios.push(data);
+          this.remitentes.push(data);
         }
       } catch (err) {
         console.log(err.message);
         throw new Error(err.message);
       }
     },
-    async delFolio (id) {
+    async delRemitente (id) {
       try {
-        const response = await api.delete(`/cadido/${id}`);
+        const response = await api.delete(`/remitente/${id}`);
         data.id = response.id;
-        this.cadidos.push(data);
+        this.remitentes.push(data);
       } catch (err) {
         console.log(err.message);
         throw new Error(err.message);

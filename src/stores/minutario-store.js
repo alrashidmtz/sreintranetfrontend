@@ -18,16 +18,16 @@ export const useMinutarioStore = defineStore('minutario', {
         throw new Error(err.message);
       }
     },
-    async fetchFolios (startRow,
+    async fetchFolios (page,
       fetchCount,
       filter,
       sortBy,
       descending) {
       try {
-
-        const query = `/minutario?filter=${filter}&sortby=${sortBy}&descending=${descending}&fetchcount=${fetchCount}&startrow=${startRow}`
+        const query = `/minutario `;
         const result = await api.get(query);
-        this.folios = result.data.data;
+        console.log(result.data);
+        this.folios = result.data;
       } catch (err) {
         console.log(err.message);
         throw new Error(err.message);
@@ -37,6 +37,7 @@ export const useMinutarioStore = defineStore('minutario', {
       try {
         const response = await api.post("/minutario", data);
         data.id = response.data.insertId;
+        console.log(data);
         this.folios.push(data);
       } catch (err) {
         console.log(err.message);

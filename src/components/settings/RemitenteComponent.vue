@@ -1,11 +1,12 @@
 <template>
   <q-table
     dense
-    title="SEM"
+    title="Remitente"
     :pagination="initialPagination"
-    :rows="storeSEM.SEM"
+    :rows="storeRemitente.remitentes"
     :columns="columns"
     :filter="filter"
+    :loading="isLoading"
     row-key="id"
     loading-label="Cargando..."
     no-data-label="No se encontraron registros"
@@ -76,27 +77,28 @@
     </template>
   </q-table>
   <q-dialog v-model="showNewregistroDialog">
-    <newSEMComponent
+    <newRemitenteComponent
       :title="title"
       :registroId="registroId"
       :registroName="registroName"
-    ></newSEMComponent>
+    ></newRemitenteComponent>
   </q-dialog>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { useQuasar } from "quasar";
-import { useSEMStore } from "src/stores/sem-store";
-import newSEMComponent from "./newSEMComponent.vue";
+import { useRemitenteStore } from "src/stores/remitente-store";
+import newRemitenteComponent from "./newRemitenteComponent.vue";
 
 const $q = useQuasar();
-const storeSEM = useSEMStore();
+const storeRemitente = useRemitenteStore();
 const showNewregistroDialog = ref(false);
 const filter = ref("");
 const title = ref("Agregar");
 const registroId = ref(null);
 const registroName = ref(null);
+const isLoading = ref(false);
 
 const initialPagination = {
   sortBy: "name",
@@ -104,7 +106,11 @@ const initialPagination = {
   page: 1,
   rowsPerPage: 20,
 };
-
+onMounted(async () => {
+  isLoading.value = true;
+  await storeRemitente.fetch();
+  isLoading.value = false;
+});
 const showNewregistro = () => {
   title.value = "Agregar";
   registroId.value = null;
@@ -127,7 +133,7 @@ const deleteregistro = (id, name) => {
     message: `¿Está seguro de borrar el registro: ${name}?`,
     cancel: true,
   }).onOk(async () => {
-    const result = await storeSEM.delregistro(id);
+    const result = await storeRemitente.delregistro(id);
     if (result) {
       $q.notify({
         color: "positive",
@@ -139,19 +145,11 @@ const deleteregistro = (id, name) => {
 
 const columns = [
   {
-    name: "name",
+    name: "remitente",
     required: true,
     label: "Nombre",
     align: "left",
-    field: "name",
-    sortable: true,
-  },
-  {
-    name: "lastName",
-    required: true,
-    label: "Apellidos",
-    align: "left",
-    field: "lastName",
+    field: "remitente",
     sortable: true,
   },
 ];

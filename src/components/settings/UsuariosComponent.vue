@@ -3,9 +3,10 @@
     dense
     title="Usuarios"
     :pagination="initialPagination"
-    :rows="storeSEM.SEM"
+    :rows="storeUsuarios.usuarios"
     :columns="columns"
     :filter="filter"
+    :loading="isLoading"
     row-key="id"
     loading-label="Cargando..."
     no-data-label="No se encontraron registros"
@@ -76,27 +77,28 @@
     </template>
   </q-table>
   <q-dialog v-model="showNewregistroDialog">
-    <newSEMComponent
+    <newUsuarioComponent
       :title="title"
       :registroId="registroId"
       :registroName="registroName"
-    ></newSEMComponent>
+    ></newUsuarioComponent>
   </q-dialog>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { useQuasar } from "quasar";
-import { useSEMStore } from "src/stores/sem-store";
-import newSEMComponent from "./newSEMComponent.vue";
+import { useUsuariosStore } from "src/stores/usuarios-store";
+import newUsuarioComponent from "./newUsuarioComponent.vue";
 
 const $q = useQuasar();
-const storeSEM = useSEMStore();
+const storeUsuarios = useUsuariosStore();
 const showNewregistroDialog = ref(false);
 const filter = ref("");
 const title = ref("Agregar");
 const registroId = ref(null);
 const registroName = ref(null);
+const isLoading = ref(false);
 
 const initialPagination = {
   sortBy: "name",
@@ -104,6 +106,12 @@ const initialPagination = {
   page: 1,
   rowsPerPage: 20,
 };
+
+onMounted(async () => {
+  isLoading.value = true;
+  await storeUsuarios.fetch();
+  isLoading.value = false;
+});
 
 const showNewregistro = () => {
   title.value = "Agregar";
@@ -127,7 +135,7 @@ const deleteregistro = (id, name) => {
     message: `¿Está seguro de borrar el registro: ${name}?`,
     cancel: true,
   }).onOk(async () => {
-    const result = await storeSEM.delregistro(id);
+    const result = await storeUsuarios.delregistro(id);
     if (result) {
       $q.notify({
         color: "positive",
@@ -139,11 +147,35 @@ const deleteregistro = (id, name) => {
 
 const columns = [
   {
-    name: "name",
+    name: "username",
     required: true,
     label: "Usuario",
     align: "left",
-    field: "name",
+    field: "username",
+    sortable: true,
+  },
+  {
+    name: "displayName",
+    required: true,
+    label: "Nombre",
+    align: "left",
+    field: "displayName",
+    sortable: true,
+  },
+  {
+    name: "type",
+    required: true,
+    label: "Permisos",
+    align: "left",
+    field: "type",
+    sortable: true,
+  },
+  {
+    name: "enabled",
+    required: true,
+    label: "Activo",
+    align: "left",
+    field: "enabled",
     sortable: true,
   },
   {

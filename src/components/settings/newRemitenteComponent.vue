@@ -1,14 +1,15 @@
 <template>
   <q-card style="width: 600px">
-    <q-card-section class="row items-center q-pb-none">
-      <div class="text-h6">{{ title }} cadido</div>
+    <q-card-section class="row items-center">
+      <div class="text-h6">{{ title }} Remitente</div>
       <q-space />
       <q-btn icon="close" flat round dense v-close-popup />
     </q-card-section>
     <q-card-section>
       <q-form @submit="onSubmit" class="q-gutter-md">
-        <q-input outlined v-model="cadido" autofocus label="Nombre" dense>
+        <q-input outlined v-model="name" autofocus label="Nombre" dense>
         </q-input>
+        <q-input outlined v-model="lastName" label="Apellidos" dense> </q-input>
       </q-form>
     </q-card-section>
     <q-separator />
@@ -27,40 +28,50 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useQuasar } from "quasar";
-import { useCadidoStore } from "src/stores/cadido-store";
+import { useRemitenteStore } from "src/stores/remitente-store";
 
 const $q = useQuasar();
-const storecadido = useCadidoStore();
-const cadido = ref("");
+const storeRemitente = useRemitenteStore();
+const name = ref("");
+const lastName = ref("");
 
 const props = defineProps({
   title: {
     type: String,
     default: "",
   },
-  cadidoId: {
+  empleadoId: {
     type: String,
     requiered: true,
   },
-  cadidoName: {
+  empleadoName: {
+    type: String,
+    requiered: true,
+  },
+  empleadoLastName: {
     type: String,
     requiered: true,
   },
 });
 
 onMounted(() => {
-  cadido.value = props.cadidoName;
+  name.value = props.empleadoName;
+  lastName.value = props.empleadoLastName;
 });
 
 async function onSubmit() {
   try {
     let result = null;
     if (props.title === "Agregar") {
-      result = await storecadido.addcadido({ name: cadido.value });
+      result = await storeRemitente.addempleado({
+        name: name.value,
+        lastName: lastName.value,
+      });
     } else {
-      result = await storecadido.updcadido({
-        id: props.cadidoId,
-        name: cadido.value,
+      result = await storeRemitente.updempleado({
+        id: props.empleadoId,
+        name: name.value,
+        lastName: lastName.value,
       });
     }
     if (result) {
@@ -68,14 +79,14 @@ async function onSubmit() {
         color: "positive",
         message:
           props.title === "Agregar"
-            ? "cadido agregado correctamente"
-            : "cadido modificado correctamente",
+            ? "Empleado agregado correctamente"
+            : "Empleado modificado correctamente",
       });
     }
   } catch (error) {
     $q.notify({
       color: "negative",
-      message: "Ocurrió un error al agregar el cadido",
+      message: "Ocurrió un error al agregar el empleado",
     });
     console.log(error);
   }

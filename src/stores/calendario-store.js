@@ -1,17 +1,17 @@
 import { defineStore } from 'pinia';
 import { api } from "boot/axios";
 
-export const useSEMStore = defineStore('sem', {
+export const useCalendarioStore = defineStore('calendario', {
   state: () => ({
-    SEM: [],
+    calendario: [],
   }),
   getters: {
   },
   actions: {
-    async fetchSEM () {
+    async fetch () {
       try {
-        const query = await api.get("/sem");
-        this.SEM = query.data.data;
+        const query = await api.get("/calendario");
+        this.calendario = query.data;
       } catch (err) {
         console.log(err.message);
         throw new Error(err.message);
@@ -19,9 +19,9 @@ export const useSEMStore = defineStore('sem', {
     },
     async addFolio (data) {
       try {
-        const response = await api.post("/sem", data);
+        const response = await api.post("/calendario", data);
         data.id = response.data.insertId;
-        this.SEM.push(data);
+        this.calendario.push(data);
       } catch (err) {
         console.log(err.message);
         throw new Error(err.message);
@@ -29,7 +29,7 @@ export const useSEMStore = defineStore('sem', {
     },
     async updFolio (id, data) {
       try {
-        const response = await api.put(`/sem/${id}`, data);
+        const response = await api.put(`/calendario/${id}`, data);
         if (response) {
           this.folios.push(data);
         }
@@ -40,9 +40,9 @@ export const useSEMStore = defineStore('sem', {
     },
     async delFolio (id) {
       try {
-        const response = await api.delete(`/sem/${id}`);
+        const response = await api.delete(`/calendario/${id}`);
         data.id = response.id;
-        this.SEM.push(data);
+        this.calendario.push(data);
       } catch (err) {
         console.log(err.message);
         throw new Error(err.message);

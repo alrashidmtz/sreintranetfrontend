@@ -2,7 +2,13 @@
   <q-layout view="hHh lpR fFf">
     <q-header elevated>
       <q-toolbar class="toolbar_top">
-        <q-btn dense flat round icon="menu" @click="leftDrawerOpen = true" />
+        <q-btn
+          dense
+          flat
+          round
+          icon="menu"
+          @click="leftDrawerOpen = !leftDrawerOpen"
+        />
         <q-toolbar-title>
           <img
             class="flex flex-center"

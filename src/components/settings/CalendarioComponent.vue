@@ -1,11 +1,12 @@
 <template>
   <q-table
     dense
-    title="Clasificación archivística"
+    title="Calendario"
     :pagination="initialPagination"
-    :rows="storeCadido.cadido"
+    :rows="storeCalendario.calendario"
     :columns="columns"
     :filter="filter"
+    :loading="isLoading"
     row-key="id"
     loading-label="Cargando..."
     no-data-label="No se encontraron registros"
@@ -76,27 +77,28 @@
     </template>
   </q-table>
   <q-dialog v-model="showNewregistroDialog">
-    <newCadidoComponent
+    <newCalendarioComponent
       :title="title"
       :registroId="registroId"
       :registroName="registroName"
-    ></newCadidoComponent>
+    ></newCalendarioComponent>
   </q-dialog>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { useQuasar } from "quasar";
-import { useCadidoStore } from "src/stores/cadido-store";
-import newCadidoComponent from "./newCadidoComponent.vue";
+import { useCalendarioStore } from "src/stores/calendario-store";
+import newCalendarioComponent from "./newCalendarioComponent.vue";
 
 const $q = useQuasar();
-const storeCadido = useCadidoStore();
+const storeCalendario = useCalendarioStore();
 const showNewregistroDialog = ref(false);
 const filter = ref("");
 const title = ref("Agregar");
 const registroId = ref(null);
 const registroName = ref(null);
+const isLoading = ref(false);
 
 const initialPagination = {
   sortBy: "name",
@@ -104,7 +106,11 @@ const initialPagination = {
   page: 1,
   rowsPerPage: 20,
 };
-
+onMounted(async () => {
+  isLoading.value = true;
+  await storeCalendario.fetch();
+  isLoading.value = false;
+});
 const showNewregistro = () => {
   title.value = "Agregar";
   registroId.value = null;
@@ -127,7 +133,7 @@ const deleteregistro = (id, name) => {
     message: `¿Está seguro de borrar el registro: ${name}?`,
     cancel: true,
   }).onOk(async () => {
-    const result = await storeCadido.delregistro(id);
+    const result = await storeCalendario.delregistro(id);
     if (result) {
       $q.notify({
         color: "positive",
@@ -139,27 +145,44 @@ const deleteregistro = (id, name) => {
 
 const columns = [
   {
-    name: "nivel",
+    name: "fecha",
     required: true,
-    label: "Nivel",
+    label: "Fecha",
     align: "left",
-    field: "nivel",
+    field: "fecha",
+    format: (val, row) => `${val.toString().slice(0, 10)}`,
     sortable: true,
   },
   {
-    name: "codigo",
+    name: "descripcion",
     required: true,
-    label: "Código",
+    label: "Descripción",
     align: "left",
-    field: "codigo",
+    field: "descripcion",
     sortable: true,
   },
   {
-    name: "titulo",
+    name: "categoria",
     required: true,
-    label: "Título",
+    label: "Categoría",
     align: "left",
-    field: "titulo",
+    field: "categoria",
+    sortable: true,
+  },
+  {
+    name: "enabled",
+    required: true,
+    label: "Activo?",
+    align: "left",
+    field: "enabled",
+    sortable: true,
+  },
+  {
+    name: "lastName",
+    required: true,
+    label: "Apellidos",
+    align: "left",
+    field: "lastName",
     sortable: true,
   },
 ];

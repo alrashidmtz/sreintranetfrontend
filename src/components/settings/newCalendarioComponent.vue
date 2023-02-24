@@ -1,7 +1,7 @@
 <template>
   <q-card style="width: 600px">
-    <q-card-section class="row items-center q-pb-none">
-      <div class="text-h6">{{ title }} SEM</div>
+    <q-card-section class="row items-center">
+      <div class="text-h6">{{ title }} Calendario</div>
       <q-space />
       <q-btn icon="close" flat round dense v-close-popup />
     </q-card-section>
@@ -28,10 +28,10 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useQuasar } from "quasar";
-import { useSEMStore } from "src/stores/sem-store";
+import { useCalendarioStore } from "src/stores/calendario-store";
 
 const $q = useQuasar();
-const storeSEM = useSEMStore();
+const storeCalendario = useCalendarioStore();
 const name = ref("");
 const lastName = ref("");
 
@@ -63,12 +63,12 @@ async function onSubmit() {
   try {
     let result = null;
     if (props.title === "Agregar") {
-      result = await storeSEM.addempleado({
+      result = await storeCalendario.addempleado({
         name: name.value,
         lastName: lastName.value,
       });
     } else {
-      result = await storeSEM.updempleado({
+      result = await storeCalendario.updempleado({
         id: props.empleadoId,
         name: name.value,
         lastName: lastName.value,
