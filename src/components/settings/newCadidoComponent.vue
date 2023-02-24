@@ -1,13 +1,13 @@
 <template>
   <q-card style="width: 600px">
     <q-card-section class="row items-center q-pb-none">
-      <div class="text-h6">{{ title }} edificio</div>
+      <div class="text-h6">{{ title }} cadido</div>
       <q-space />
       <q-btn icon="close" flat round dense v-close-popup />
     </q-card-section>
     <q-card-section>
       <q-form @submit="onSubmit" class="q-gutter-md">
-        <q-input outlined v-model="edificio" autofocus label="Nombre" dense>
+        <q-input outlined v-model="cadido" autofocus label="Nombre" dense>
         </q-input>
       </q-form>
     </q-card-section>
@@ -27,40 +27,40 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useQuasar } from "quasar";
-import { useEdificiosStore } from "src/stores/edificios-store";
+import { useCadidoStore } from "src/stores/cadido-store";
 
 const $q = useQuasar();
-const storeEdificios = useEdificiosStore();
-const edificio = ref("");
+const storecadido = useCadidoStore();
+const cadido = ref("");
 
 const props = defineProps({
   title: {
     type: String,
     default: "",
   },
-  edificioId: {
+  cadidoId: {
     type: String,
     requiered: true,
   },
-  edificioName: {
+  cadidoName: {
     type: String,
     requiered: true,
   },
 });
 
 onMounted(() => {
-  edificio.value = props.edificioName;
+  cadido.value = props.cadidoName;
 });
 
 async function onSubmit() {
   try {
     let result = null;
     if (props.title === "Agregar") {
-      result = await storeEdificios.addEdificio({ name: edificio.value });
+      result = await storecadido.addcadido({ name: cadido.value });
     } else {
-      result = await storeEdificios.updEdificio({
-        id: props.edificioId,
-        name: edificio.value,
+      result = await storecadido.updcadido({
+        id: props.cadidoId,
+        name: cadido.value,
       });
     }
     if (result) {
@@ -68,14 +68,14 @@ async function onSubmit() {
         color: "positive",
         message:
           props.title === "Agregar"
-            ? "Edificio agregado correctamente"
-            : "Edificio modificado correctamente",
+            ? "cadido agregado correctamente"
+            : "cadido modificado correctamente",
       });
     }
   } catch (error) {
     $q.notify({
       color: "negative",
-      message: "Ocurrió un error al agregar el edificio",
+      message: "Ocurrió un error al agregar el cadido",
     });
     console.log(error);
   }

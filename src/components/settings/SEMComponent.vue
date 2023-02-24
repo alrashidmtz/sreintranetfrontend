@@ -141,9 +141,17 @@ const columns = [
   {
     name: "name",
     required: true,
-    label: "registro",
+    label: "Nombre",
     align: "left",
     field: "name",
+    sortable: true,
+  },
+  {
+    name: "lastName",
+    required: true,
+    label: "Apellidos",
+    align: "left",
+    field: "lastName",
     sortable: true,
   },
 ];

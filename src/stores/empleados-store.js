@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { api } from "boot/axios";
 
-export const useEmpleadostore = defineStore('empleado', {
+export const useEmpleadosStore = defineStore('empleado', {
   state: () => ({
     empleados: [],
   }),

@@ -28,10 +28,10 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useQuasar } from "quasar";
-import { useempleadosStore } from "src/stores/empleados-store";
+import { useEmpleadosStore } from "src/stores/empleados-store";
 
 const $q = useQuasar();
-const storeempleados = useempleadosStore();
+const storeempleados = useEmpleadosStore();
 const name = ref("");
 const lastName = ref("");
 

@@ -139,11 +139,27 @@ const deleteregistro = (id, name) => {
 
 const columns = [
   {
-    name: "name",
+    name: "nivel",
     required: true,
-    label: "registro",
+    label: "Nivel",
     align: "left",
-    field: "name",
+    field: "nivel",
+    sortable: true,
+  },
+  {
+    name: "codigo",
+    required: true,
+    label: "Código",
+    align: "left",
+    field: "codigo",
+    sortable: true,
+  },
+  {
+    name: "titulo",
+    required: true,
+    label: "Título",
+    align: "left",
+    field: "titulo",
     sortable: true,
   },
 ];

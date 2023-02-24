@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { api } from "boot/axios";
 
-export const useSEMtore = defineStore('sem', {
+export const useSEMStore = defineStore('sem', {
   state: () => ({
     SEM: [],
   }),

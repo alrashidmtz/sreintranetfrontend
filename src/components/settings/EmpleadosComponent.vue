@@ -87,11 +87,11 @@
 <script setup>
 import { ref } from "vue";
 import { useQuasar } from "quasar";
-import { useempleadosStore } from "src/stores/empleados-store";
+import { useEmpleadosStore } from "src/stores/empleados-store";
 import newEmpleadosComponent from "./newEmpleadosComponent.vue";
 
 const $q = useQuasar();
-const storeEmpleados = useempleadosStore();
+const storeEmpleados = useEmpleadosStore();
 const showNewregistroDialog = ref(false);
 const filter = ref("");
 const title = ref("Agregar");
@@ -141,9 +141,17 @@ const columns = [
   {
     name: "name",
     required: true,
-    label: "registro",
+    label: "Nombre",
     align: "left",
     field: "name",
+    sortable: true,
+  },
+  {
+    name: "lastName",
+    required: true,
+    label: "Apellidos",
+    align: "left",
+    field: "lastName",
     sortable: true,
   },
 ];

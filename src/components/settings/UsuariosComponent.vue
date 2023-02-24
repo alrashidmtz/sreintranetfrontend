@@ -1,7 +1,7 @@
 <template>
   <q-table
     dense
-    title="SEM"
+    title="Usuarios"
     :pagination="initialPagination"
     :rows="storeSEM.SEM"
     :columns="columns"
@@ -141,9 +141,17 @@ const columns = [
   {
     name: "name",
     required: true,
-    label: "registro",
+    label: "Usuario",
     align: "left",
     field: "name",
+    sortable: true,
+  },
+  {
+    name: "email",
+    required: true,
+    label: "Correo electrónico",
+    align: "left",
+    field: "email",
     sortable: true,
   },
 ];
